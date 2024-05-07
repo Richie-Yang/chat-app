@@ -4,18 +4,20 @@ import * as Router from '@koa/router';
 // import * as multer from '@koa/multer';
 import * as logger from 'koa-logger';
 import * as mount from 'koa-mount';
+import * as path from 'path';
+import * as http from 'http';
 import send = require('koa-send');
 import { parseBody, logRequest, validateToken } from './middlewares';
 import { respondError, respondMessage } from './responses';
 import { CONFIG } from './config';
 import { Server } from 'socket.io';
-import * as path from 'path';
-import * as http from 'http';
+import { chatRepository, firestore } from './firebase';
 
 const app = new Koa({ proxy: false });
 const router = new Router();
 const server = http.createServer(app.callback());
 const io = new Server(server, { connectionStateRecovery: {} });
+firestore.init();
 // const uploadFile = multer();
 
 app.use(
@@ -52,6 +54,7 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
+    chatRepository.create('requestId', { message: msg });
     io.emit('chat message', msg);
   });
 });

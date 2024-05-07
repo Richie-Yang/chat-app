@@ -69,5 +69,6 @@ node_modules/
 # custom
 lib/
 *service_account.json
+env/service_account*
 tn.png
 temp/

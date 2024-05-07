@@ -21,13 +21,17 @@
     "@koa/router": "^12.0.0",
     "ajv": "^8.12.0",
     "dotenv": "^16.0.3",
+    "firebase-admin": "^12.1.0",
     "koa": "^2.14.1",
     "koa-bodyparser": "^4.3.0",
     "koa-logger": "^3.2.1",
     "koa-mount": "^4.0.0",
     "koa-send": "^5.0.1",
     "lodash": "^4.17.21",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "uuid": "^9.0.1",
+    "zod": "^3.23.6",
+    "zod-to-json-schema": "^3.23.0"
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.11",
@@ -40,6 +44,7 @@
     "@types/koa-mount": "^4.0.2",
     "@types/koa-send": "^4.1.6",
     "@types/lodash": "^4.14.191",
+    "@types/uuid": "^9.0.8",
     "prettier": "^2.8.4",
     "typescript": "^5.0.4"
   }
