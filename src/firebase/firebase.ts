@@ -37,6 +37,7 @@ export {
   conditionalFindAll,
   conditionalFindPaged,
   findOne,
+  conditionalFindOne,
   getCollectionRef,
   getDocumentRef,
   runTransaction,
@@ -367,6 +368,30 @@ async function findOne(
   );
   if (options?.filter?.where)
     docRef = await _where(docRef, options.filter.where);
+  if (options?.filter?.order)
+    docRef = await _order(docRef, options.filter.order);
+  docRef = docRef.limit(1);
+  const docSnap = await docRef.get();
+  docSnap.forEach((doc) => allDocs.push(doc.data()));
+  return _.get(allDocs, '[0]', null) as firestore.DocumentData | null;
+}
+
+async function conditionalFindOne(
+  collection: string,
+  options?: { filter?: ConditionalOrderWhereQuery; requestId?: string }
+) {
+  if (options?.requestId) {
+    const counter = getCounter(options.requestId);
+    counter.READ_COUNT++;
+    const funcName = `${collection}.${findOne.name}`;
+    counter.TRACE_CALLS.push(funcName);
+  }
+  const allDocs: firestore.DocumentData[] = [];
+  let docRef: QueryRef | CollectionRef = db().collection(
+    `${prefix}${collection}`
+  );
+  if (options?.filter?.where)
+    docRef = await _getDocRefWithWhere(docRef, options.filter.where);
   if (options?.filter?.order)
     docRef = await _order(docRef, options.filter.order);
   docRef = docRef.limit(1);

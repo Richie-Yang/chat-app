@@ -17,6 +17,7 @@ export enum DataType {
 
 export enum DataModel {
   CHAT = 'chat',
+  USER = 'user',
 }
 
 export enum SchemaType {

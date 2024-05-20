@@ -1,0 +1,9 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "endpoint": "http://localhost:5001"
+    },
+    "dev": {},
+    "prod": {}
+  }
+}

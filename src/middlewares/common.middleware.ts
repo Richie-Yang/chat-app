@@ -1,8 +1,6 @@
 import { Context, Next } from 'koa';
 import * as koaBodyParser from 'koa-bodyparser';
-import { CONFIG } from './config';
-import { throwError } from './responses';
-import { NodeEnv } from './variables';
+import { CONFIG } from '../config';
 
 export function parseBody(opts?: any) {
   const bp = koaBodyParser(opts);
@@ -22,13 +20,4 @@ export function logRequest() {
     console.log(`body: ${JSON.stringify(request.body)}`);
     return next();
   };
-}
-
-export function validateToken(ctx: Context, next: Next) {
-  if (CONFIG.NODE_ENV === NodeEnv.LOCAL) return next();
-  const token = ctx.request.header['authorization'] as string | undefined;
-  if (!token) throwError(ctx, 403, 'no token provided');
-  const configToken = `Bearer ${CONFIG.AUTH_TOKEN}`;
-  if (token !== configToken) throwError(ctx, 403, 'invalid token');
-  return next();
 }

@@ -1,8 +1,0 @@
-@endpoint_local = http://127.0.0.1:5001
-@endpoint_dev = https://pdf-convert-test-huqdsm6bea-de.a.run.app
-
-# @name test
-GET {{endpoint_local}}/test
-Content-Type: application/json
-
-###

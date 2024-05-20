@@ -1,24 +1,20 @@
 import * as Koa from 'koa';
 import * as cors from '@koa/cors';
-import * as Router from '@koa/router';
-// import * as multer from '@koa/multer';
 import * as logger from 'koa-logger';
-import * as mount from 'koa-mount';
-import * as path from 'path';
 import * as http from 'http';
-import send = require('koa-send');
-import { parseBody, logRequest, validateToken } from './middlewares';
-import { respondError, respondMessage } from './responses';
+import * as routes from './routes';
+
+import { parseBody, logRequest } from './middlewares/common.middleware';
+import { respondError } from './utils/responses.util';
 import { CONFIG } from './config';
 import { Server } from 'socket.io';
 import { chatRepository, firestore } from './firebase';
+import { get } from 'lodash';
 
 const app = new Koa({ proxy: false });
-const router = new Router();
 const server = http.createServer(app.callback());
 const io = new Server(server, { connectionStateRecovery: {} });
 firestore.init();
-// const uploadFile = multer();
 
 app.use(
   cors({
@@ -38,28 +34,27 @@ app.use(async (ctx: Koa.Context, next: Koa.Next) => {
   }
 });
 
-router.get('/test', validateToken, async (ctx: Koa.Context) =>
-  respondMessage(ctx, 'ok')
-);
-
-router.get('/', async (ctx: Koa.Context) => {
-  await send(ctx, ctx.path, {
-    root: path.join(__dirname, '../public/index.html'),
-  });
-});
-
 io.on('connection', (socket) => {
   console.log('a user connected');
+  const now = new Date();
   socket.broadcast.emit('hi');
 
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
     chatRepository.create('requestId', { message: msg });
-    io.emit('chat message', msg);
+    io.emit('chat message', `${msg} at ${now}`);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('a user disconnected');
   });
 });
 
-app.use(mount('/', router.routes()));
+for (const route in routes) {
+  const routeModule = get(routes, route) as Koa.Middleware;
+  app.use(routeModule);
+  console.log(`routeModule ${route} is bind`);
+}
 
 server.listen(CONFIG.PORT, () =>
   console.log(`Server running on port ${CONFIG.PORT}`)
