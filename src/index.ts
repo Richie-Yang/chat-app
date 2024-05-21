@@ -7,16 +7,16 @@ import * as routes from './routes';
 import { parseBody, logRequest } from './middlewares/common.middleware';
 import { respondError } from './utils/responses.util';
 import { CONFIG } from './config';
-import { firestore } from './firebase';
+import { firestore } from './repositories';
 import { get } from 'lodash';
 import { Server } from 'socket.io';
-import { chatService } from './services';
+import { websocket } from './websocket';
 
 const app = new Koa({ proxy: false });
 const server = http.createServer(app.callback());
 const io = new Server(server, { connectionStateRecovery: {} });
 firestore.init();
-chatService.init(io);
+websocket.init(io);
 
 app.use(
   cors({

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import * as Schema from '../schemas/user.schema';
 import { DataModel, SchemaType } from '../variables';
-import { firebaseRepository } from './';
+import { firebaseRepository } from '.';
 import {
   ConditionalOrderWhereQuery,
   FindAllResponse,
@@ -31,7 +31,6 @@ async function findById(
   requestId: string,
   id: string
 ): Promise<Schema.User<SchemaType.OUTPUT> | null> {
-  console.log('findById', id);
   const result = await firebaseRepository.findById(DataModel.USER, id, {
     requestId,
   });

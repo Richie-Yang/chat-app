@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
-import { FirestoreCounter } from './firebase/firebase.type';
+import { FirestoreCounter } from './repositories/firebase.type';
 
 const envPath = path.join(__dirname, '../env/.env');
 

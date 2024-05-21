@@ -1,0 +1,37 @@
+@userId = {{login.response.body.data.id}}
+@token = {{login.response.body.data.token}}
+
+# @name login
+POST {{endpoint}}/api/user/login
+Content-Type: application/json
+
+{
+  "email": {{email}},
+  "password": {{password}}
+}
+###
+
+# @name createChat
+POST {{endpoint}}/api/chat
+Content-Type: application/json
+Authorization: Bearer {{userId}}:{{token}}
+
+{
+  "chat": {
+    "userIds": []
+  },
+  "message": {
+    "from": {
+      "id": "{{userId}}",
+      "name": "test-name",
+      "email": "test-email"
+    },
+    "to": {
+      "id": "user-id2",
+      "name": "test-name",
+      "email": "test-email"
+    },
+    "message": "test-message"
+  }
+}
+###

@@ -17,6 +17,7 @@ import {
   ConditionalFilterQuery,
   ConditionalOrderWhereQuery,
   ConditionalQuery,
+  SubCollection,
 } from './firebase.type';
 import { CONFIG } from '../config';
 import { NodeEnv } from '../variables';
@@ -103,7 +104,11 @@ async function login(firebaseUid: string): Promise<UserResponse> {
 async function create(
   collection: string,
   createData: CreateData = {},
-  options: { documentId?: string; requestId?: string } = {}
+  options: {
+    documentId?: string;
+    requestId?: string;
+    subCollection?: SubCollection;
+  } = {}
 ) {
   if (options.requestId) {
     const counter = getCounter(options.requestId);
@@ -117,10 +122,9 @@ async function create(
     createdAt: Math.round(Date.now() / 1000),
     updatedAt: Math.round(Date.now() / 1000),
   });
-  const res = await db()
-    .collection(`${prefix}${collection}`)
-    .doc(data.id)
-    .set(data);
+
+  const docRef = getCollectionRef(collection, options.subCollection);
+  const res = await docRef.doc(data.id).set(data);
   return { id, ...res };
 }
 
@@ -128,7 +132,7 @@ async function updateById(
   collection: string,
   documentId: string,
   updateData: UpdateData = {},
-  options?: { requestId?: string }
+  options?: { requestId?: string; subCollection?: SubCollection }
 ) {
   if (options?.requestId) {
     const counter = getCounter(options.requestId);
@@ -137,10 +141,9 @@ async function updateById(
     counter.TRACE_CALLS.push(funcName);
   }
   updateData.updatedAt = Math.round(Date.now() / 1000);
-  return db()
-    .collection(`${prefix}${collection}`)
-    .doc(documentId)
-    .update(updateData);
+
+  const docRef = getCollectionRef(collection, options?.subCollection || null);
+  return docRef.doc(documentId).update(updateData);
 }
 
 async function deleteById(
@@ -246,12 +249,18 @@ async function findPaged(
 
 async function findAll(
   collection: string,
-  options?: { filter?: OrderWhereQuery; requestId?: string }
+  options?: {
+    subCollection?: SubCollection;
+    filter?: OrderWhereQuery;
+    requestId?: string;
+  }
 ) {
   const allDocs: firestore.DocumentData[] = [];
-  let docRef: QueryRef | CollectionRef = db().collection(
-    `${prefix}${collection}`
+  let docRef: QueryRef | CollectionRef = getCollectionRef(
+    collection,
+    options?.subCollection
   );
+
   if (options?.filter?.where)
     docRef = await _where(docRef, options.filter.where);
   if (options?.filter?.order)
@@ -400,8 +409,17 @@ async function conditionalFindOne(
   return _.get(allDocs, '[0]', null) as firestore.DocumentData | null;
 }
 
-async function getCollectionRef(collection: string) {
-  return db().collection(`${prefix}${collection}`);
+function getCollectionRef(
+  collection: string,
+  subCollection?: SubCollection | null
+) {
+  const collectionName = `${prefix}${collection}`;
+  const parentCollection = db().collection(collectionName);
+  return !subCollection
+    ? parentCollection
+    : parentCollection
+        .doc(subCollection.documentId)
+        .collection(subCollection.collection);
 }
 
 async function getDocumentRef(collection: string, documentId: string) {

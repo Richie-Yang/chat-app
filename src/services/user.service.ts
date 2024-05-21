@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcrypt';
 import { cloneDeep, omit } from 'lodash';
-import { userRepository } from '../firebase';
+import { userRepository } from '../repositories';
 import { userSchema } from '../schemas';
-import { WhereOperator } from '../firebase/firebase.variable';
+import { WhereOperator } from '../repositories/firebase.variable';
 import { genRandomString } from '../utils/common.util';
 import { sessionService } from '.';
 

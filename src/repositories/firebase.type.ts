@@ -106,3 +106,8 @@ export type FirestoreCount = {
   TRACE_CALLS: string[];
   RE_INIT?: boolean;
 };
+
+export type SubCollection = {
+  documentId: string;
+  collection: string;
+};
