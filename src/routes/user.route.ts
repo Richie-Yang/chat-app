@@ -36,4 +36,9 @@ router.post(
   }
 );
 
+router.get('/api/user', async (ctx: Context) => {
+  const result = await userService.findAll(ctx.requestId);
+  return respondData(ctx, result);
+});
+
 export default router.routes();

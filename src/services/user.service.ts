@@ -9,7 +9,7 @@ import { sessionService } from '.';
 const PASSWORD_SALT_ROUNDS = 10;
 const TOKEN_EXPIRES_IN = 60 * 60 * 6; // 6 hours
 
-export { signup, login, logout, findById };
+export { signup, login, logout, findById, findAll };
 
 async function signup(requestId: string, data: userSchema.Signup) {
   const foundUser = await userRepository.findOne(requestId, {
@@ -92,4 +92,8 @@ async function findById(
   user = await userRepository.findById(requestId, id);
   if (user) sessionService.set(USER_KEY, user);
   return user;
+}
+
+async function findAll(requestId: string) {
+  return userRepository.findAll(requestId);
 }
