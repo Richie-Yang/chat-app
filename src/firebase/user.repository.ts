@@ -31,6 +31,7 @@ async function findById(
   requestId: string,
   id: string
 ): Promise<Schema.User<SchemaType.OUTPUT> | null> {
+  console.log('findById', id);
   const result = await firebaseRepository.findById(DataModel.USER, id, {
     requestId,
   });

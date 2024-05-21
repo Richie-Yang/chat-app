@@ -12,6 +12,12 @@
     />
   </head>
   <body>
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link" href="/signup">Sign Up</a>
+      </li>
+    </ul>
+
     <form>
       <div class="form-group">
         <label for="email">Email</label>
@@ -34,22 +40,35 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      document.getElementById('submit').addEventListener('click', async (e) => {
+      document.getElementById('submit').addEventListener('click', (e) => {
         e.preventDefault();
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        const response = await fetch('/api/user/login', {
+
+        fetch('/api/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ email, password }),
-        }).catch((err) => {
-          console.log(err);
-        });
+        })
+          .then((response) => response.json())
+          .then((parsedRes) => {
+            console.log('parsedRes:', parsedRes);
+            const id = parsedRes.data.id;
+            const token = parsedRes.data.token;
+            if (!id || !token) throw new Error('Invalid response');
 
-        const data = await response.json();
-        window.location.href = './chat';
+            const authToken = `${id}:${token}`;
+            sessionStorage.setItem('token', authToken);
+            return authToken;
+          })
+          .then(() => {
+            window.location.href = './chat';
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
     </script>
   </body>

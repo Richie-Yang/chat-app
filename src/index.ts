@@ -7,14 +7,16 @@ import * as routes from './routes';
 import { parseBody, logRequest } from './middlewares/common.middleware';
 import { respondError } from './utils/responses.util';
 import { CONFIG } from './config';
-import { Server } from 'socket.io';
-import { chatRepository, firestore } from './firebase';
+import { firestore } from './firebase';
 import { get } from 'lodash';
+import { Server } from 'socket.io';
+import { chatService } from './services';
 
 const app = new Koa({ proxy: false });
 const server = http.createServer(app.callback());
 const io = new Server(server, { connectionStateRecovery: {} });
 firestore.init();
+chatService.init(io);
 
 app.use(
   cors({
@@ -32,22 +34,6 @@ app.use(async (ctx: Koa.Context, next: Koa.Next) => {
   } catch (err) {
     return respondError(ctx, err);
   }
-});
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-  const now = new Date();
-  socket.broadcast.emit('hi');
-
-  socket.on('chat message', (msg) => {
-    console.log('message: ' + msg);
-    chatRepository.create('requestId', { message: msg });
-    io.emit('chat message', `${msg} at ${now}`);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('a user disconnected');
-  });
 });
 
 for (const route in routes) {
