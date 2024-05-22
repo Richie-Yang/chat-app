@@ -53,13 +53,16 @@
           });
       });
 
-      fetch('/api/user', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      fetch(
+        `/api/user?filter={"where":{"and":[{"fieldKey":"id","operator":"neq","fieldValue":"${id}"}]}}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
         .then((response) => response.json())
         .then((parsedRes) => {
           const users = parsedRes.data;

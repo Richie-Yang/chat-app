@@ -37,7 +37,16 @@ router.post(
 );
 
 router.get('/api/user', validateToken, async (ctx: Context) => {
-  const result = await userService.findAll(ctx.requestId);
+  const filter = ctx.query.filter as string;
+
+  let result = [];
+  if (filter) {
+    const parsedFilter = JSON.parse(filter);
+    result = await userService.findAll(ctx.requestId, parsedFilter);
+  } else {
+    result = await userService.findAll(ctx.requestId);
+  }
+
   return respondData(ctx, result);
 });
 

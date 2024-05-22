@@ -5,6 +5,7 @@ import { userSchema } from '../schemas';
 import { WhereOperator } from '../repositories/firebase.variable';
 import { genRandomString } from '../utils/common.util';
 import { sessionService } from '.';
+import { ConditionalOrderWhereQuery } from '../repositories/firebase.type';
 
 const PASSWORD_SALT_ROUNDS = 10;
 const TOKEN_EXPIRES_IN = 60 * 60 * 6; // 6 hours
@@ -94,6 +95,6 @@ async function findById(
   return user;
 }
 
-async function findAll(requestId: string) {
-  return userRepository.findAll(requestId);
+async function findAll(requestId: string, filter?: ConditionalOrderWhereQuery) {
+  return userRepository.findAll(requestId, filter);
 }
