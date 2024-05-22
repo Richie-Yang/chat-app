@@ -15,7 +15,7 @@ function registerChatHandler(socket: Socket) {
       null
     ) as userSchema.User<SchemaType.OUTPUT> | null;
 
-    const now = new Date();
+    const now = Math.round(Date.now() / 1000);
     const { fromId, toId, content, chatId } = data;
     console.log('chat.handler:registerChatHandler:content:', content);
     await chatService.sendMessage('requestId', chatId, {
@@ -24,11 +24,13 @@ function registerChatHandler(socket: Socket) {
       content,
     });
 
-    socket.emit(chatId, `${content} by ${user?.name || ''} at ${now}`);
-    socket.broadcast.emit(
-      chatId,
-      `${content} by ${user?.name || ''} at ${now}`
-    );
+    const messageData = {
+      from: user,
+      content,
+      createdAt: now,
+    };
+    socket.emit(chatId, messageData);
+    socket.broadcast.emit(chatId, messageData);
   };
 
   socket.on('chat message', _sendMessage);

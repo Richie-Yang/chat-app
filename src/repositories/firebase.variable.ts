@@ -10,3 +10,8 @@ export enum WhereOperator {
   in = 'in',
   ['not-in'] = 'not-in',
 }
+
+export enum OrderOperator {
+  asc = 'asc',
+  desc = 'desc',
+}

@@ -1,10 +1,13 @@
 import { difference, pick } from 'lodash';
 import { chatRepository } from '../repositories';
-import { WhereOperator } from '../repositories/firebase.variable';
+import {
+  OrderOperator,
+  WhereOperator,
+} from '../repositories/firebase.variable';
 import { chatSchema } from '../schemas';
 import { SchemaType } from '../variables';
 import { sessionService, userService } from '.';
-import { OrderWhereQuery } from '../repositories/firebase.type';
+import { OrderWhereQueryWithLimit } from '../repositories/firebase.type';
 
 export { getCreateChat, sendMessage, getChatUsers, getMessages };
 
@@ -96,8 +99,16 @@ async function getChatUsers(requestId: string, fromId: string, toId: string) {
 async function getMessages(
   requestId: string,
   chatId: string,
-  filter?: OrderWhereQuery
+  filter?: OrderWhereQueryWithLimit
 ) {
+  const defaultFilter: OrderWhereQueryWithLimit = {
+    order: {
+      fieldKey: 'createdAt',
+      fieldValue: OrderOperator.asc,
+    },
+  };
+  filter = { ...defaultFilter, ...filter };
+
   const messages = await chatRepository.findAllMessages(
     requestId,
     chatId,

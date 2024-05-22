@@ -1,5 +1,5 @@
 import { firestore } from 'firebase-admin';
-import { WhereOperator } from './firebase.variable';
+import { OrderOperator, WhereOperator } from './firebase.variable';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 
 export type WhereQuery = {
@@ -15,7 +15,7 @@ export type ConditionalQuery = {
 
 export type OrderQuery = {
   fieldKey: string | firestore.FieldPath;
-  fieldValue: firestore.OrderByDirection;
+  fieldValue: OrderOperator;
 };
 
 export type OrderWhereQuery = {

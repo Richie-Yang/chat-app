@@ -61,7 +61,7 @@ async function initChat(
   message: chatSchema.Message<SchemaType.INPUT>
 ) {
   const chatId = `CHAT-${uuid.v4()}`;
-  const messageId = `MESSAGE-${uuid.v4()}`;
+  const messageId = Date.now().toString();
   const subCollection = {
     documentId: chatId,
     collection: MESSAGE_COLLECTION,
@@ -90,6 +90,7 @@ async function addMessage(
   return firebaseRepository.create(DataModel.CHAT, data, {
     requestId,
     subCollection,
+    documentId: Date.now().toString(),
   });
 }
 
