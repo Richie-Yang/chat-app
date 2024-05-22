@@ -36,7 +36,7 @@ router.post(
   }
 );
 
-router.get('/api/user', async (ctx: Context) => {
+router.get('/api/user', validateToken, async (ctx: Context) => {
   const result = await userService.findAll(ctx.requestId);
   return respondData(ctx, result);
 });

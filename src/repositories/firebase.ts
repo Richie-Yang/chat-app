@@ -18,6 +18,7 @@ import {
   ConditionalOrderWhereQuery,
   ConditionalQuery,
   SubCollection,
+  OrderWhereQueryWithLimit,
 } from './firebase.type';
 import { CONFIG } from '../config';
 import { NodeEnv } from '../variables';
@@ -251,7 +252,7 @@ async function findAll(
   collection: string,
   options?: {
     subCollection?: SubCollection;
-    filter?: OrderWhereQuery;
+    filter?: OrderWhereQueryWithLimit;
     requestId?: string;
   }
 ) {
@@ -265,6 +266,7 @@ async function findAll(
     docRef = await _where(docRef, options.filter.where);
   if (options?.filter?.order)
     docRef = await _order(docRef, options.filter.order);
+  if (options?.filter?.limit) docRef = docRef.limit(options?.filter?.limit);
   const docSnap = await docRef.get();
   docSnap.forEach((doc) => allDocs.push(doc.data()));
   if (options?.requestId) {

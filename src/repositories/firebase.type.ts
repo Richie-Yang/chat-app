@@ -23,6 +23,10 @@ export type OrderWhereQuery = {
   where?: WhereQuery | Array<WhereQuery>;
 };
 
+export type OrderWhereQueryWithLimit = OrderWhereQuery & {
+  limit?: number;
+};
+
 export type ConditionalOrderWhereQuery = {
   order?: OrderQuery | Array<OrderQuery>;
   where?: ConditionalQuery;

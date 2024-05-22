@@ -1,12 +1,13 @@
 import { Socket } from 'socket.io';
 import { get } from 'lodash';
-import { userSchema } from '../schemas';
+import { chatSchema, userSchema } from '../schemas';
 import { SchemaType } from '../variables';
+import { chatService } from '../services';
 
 export { registerChatHandler };
 
 function registerChatHandler(socket: Socket) {
-  const _sendMessage = (msg: string) => {
+  const _sendMessage = async (data: chatSchema.Send & { chatId: string }) => {
     const request = socket.request;
     const user = get(
       request,
@@ -15,11 +16,18 @@ function registerChatHandler(socket: Socket) {
     ) as userSchema.User<SchemaType.OUTPUT> | null;
 
     const now = new Date();
-    console.log('message: ' + msg);
-    // chatRepository.create('requestId', { message: msg });
-    socket.emit(
-      'chat message',
-      `${msg} by ${user?.name ?? 'unknown'} at ${now}`
+    const { fromId, toId, content, chatId } = data;
+    console.log('chat.handler:registerChatHandler:content:', content);
+    await chatService.sendMessage('requestId', chatId, {
+      fromId,
+      toId,
+      content,
+    });
+
+    socket.emit(chatId, `${content} by ${user?.name || ''} at ${now}`);
+    socket.broadcast.emit(
+      chatId,
+      `${content} by ${user?.name || ''} at ${now}`
     );
   };
 

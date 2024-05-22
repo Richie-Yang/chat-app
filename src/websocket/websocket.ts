@@ -23,7 +23,6 @@ function init(io: Server) {
 
   const onConnection = (socket: Socket) => {
     console.log('a user connected');
-    socket.broadcast.emit('hi');
 
     registerChatHandler(socket);
   };

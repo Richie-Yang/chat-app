@@ -6,8 +6,8 @@ POST {{endpoint}}/api/user/login
 Content-Type: application/json
 
 {
-  "email": {{email}},
-  "password": {{password}}
+  "email": "{{email}}",
+  "password": "{{password}}"
 }
 ###
 
@@ -17,21 +17,8 @@ Content-Type: application/json
 Authorization: Bearer {{userId}}:{{token}}
 
 {
-  "chat": {
-    "userIds": []
-  },
-  "message": {
-    "from": {
-      "id": "{{userId}}",
-      "name": "test-name",
-      "email": "test-email"
-    },
-    "to": {
-      "id": "user-id2",
-      "name": "test-name",
-      "email": "test-email"
-    },
-    "message": "test-message"
-  }
+  "fromId": "{{userId}}",
+  "toId": "USER-8067457d-d912-416e-a11a-4e231bdbd19f",
+  "content": "test-message"
 }
 ###

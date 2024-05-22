@@ -8,6 +8,7 @@ export { validateToken };
 const TOKEN_PREFIX = 'Bearer';
 
 async function validateToken(requestId: string, authToken: string) {
+  console.log('authToken', authToken);
   if (!authToken?.startsWith(TOKEN_PREFIX)) throw new Error('Token not valid');
   const parsedToken = get(authToken.split(TOKEN_PREFIX), '[1]', null) as
     | string

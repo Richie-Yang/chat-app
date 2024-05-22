@@ -4,9 +4,22 @@ import * as Schema from '../schemas/chat.schema';
 import { DataModel, SchemaType } from '../variables';
 import { firebaseRepository } from '.';
 import { chatSchema } from '../schemas';
-import { OrderWhereQuery } from './firebase.type';
+import {
+  ConditionalOrderWhereQuery,
+  FindAllResponse,
+  FindOneResponse,
+  OrderWhereQueryWithLimit,
+} from './firebase.type';
 
-export { create, initChat, addMessage, findAllMessages };
+export {
+  create,
+  findById,
+  findOne,
+  findAll,
+  initChat,
+  addMessage,
+  findAllMessages,
+};
 
 const MESSAGE_COLLECTION = 'messages';
 
@@ -15,6 +28,31 @@ async function create(requestId: string, data: Schema.Chat<SchemaType.INPUT>) {
     documentId: `CHAT-${uuid.v4()}`,
     requestId,
   });
+}
+
+async function findById(
+  requestId: string,
+  id: string
+): Promise<chatSchema.Chat<SchemaType.OUTPUT> | null> {
+  const result = await firebaseRepository.findById(DataModel.CHAT, id, {
+    requestId,
+  });
+  if (!result.data) return null;
+  return result.data as chatSchema.Chat<SchemaType.OUTPUT>;
+}
+
+async function findOne(requestId: string, filter?: ConditionalOrderWhereQuery) {
+  return firebaseRepository.conditionalFindOne(DataModel.CHAT, {
+    filter,
+    requestId,
+  }) as Promise<FindOneResponse<chatSchema.Chat<SchemaType.OUTPUT>>>;
+}
+
+async function findAll(requestId: string, filter?: ConditionalOrderWhereQuery) {
+  return firebaseRepository.conditionalFindAll(DataModel.CHAT, {
+    filter,
+    requestId,
+  }) as Promise<FindAllResponse<chatSchema.Chat<SchemaType.OUTPUT>>>;
 }
 
 async function initChat(
@@ -28,15 +66,16 @@ async function initChat(
     documentId: chatId,
     collection: MESSAGE_COLLECTION,
   };
-  await firebaseRepository.create(DataModel.CHAT, chat, {
+  const createChat = await firebaseRepository.create(DataModel.CHAT, chat, {
     requestId,
     documentId: chatId,
   });
-  return firebaseRepository.create(DataModel.CHAT, message, {
+  await firebaseRepository.create(DataModel.CHAT, message, {
     requestId,
     subCollection,
     documentId: messageId,
   });
+  return createChat;
 }
 
 async function addMessage(
@@ -57,7 +96,7 @@ async function addMessage(
 async function findAllMessages(
   requestId: string,
   chatId: string,
-  filter?: OrderWhereQuery
+  filter?: OrderWhereQueryWithLimit
 ) {
   const subCollection = {
     documentId: chatId,

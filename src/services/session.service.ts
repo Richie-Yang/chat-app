@@ -4,6 +4,7 @@ export { set, get, del, clear };
 
 export const SESSION_KEYS = {
   USER: (userId: string) => `user:${userId}`,
+  CHAT_USERS: (chatId: string) => `chatUsers:${chatId}`,
 };
 
 export let session: { [key: string]: string } = {};
