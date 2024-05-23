@@ -20,9 +20,9 @@ main components:
 
 ### App View
 
-![Login Page](https://github.com/Richie-Yang/chat-app/blob/main/public/images/login_view.png)
+![Login Page](/public/images/login_view.jpg)
 
-![Conversation Page](https://github.com/Richie-Yang/chat-app/blob/main/public/images/conversation_view.png)
+![Conversation Page](/public/images/conversation_view.jpg)
 
 ## Features
 
