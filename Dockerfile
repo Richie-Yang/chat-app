@@ -1,5 +1,5 @@
 # Build dependencies
-FROM node:17-buster-slim as dependencies
+FROM node:18-buster-slim as dependencies
 WORKDIR /app
 COPY package.json .
 RUN npm i

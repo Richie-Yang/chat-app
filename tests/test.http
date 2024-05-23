@@ -1,0 +1,5 @@
+# @name test
+GET {{endpoint_local}}/test
+Content-Type: application/json
+
+###

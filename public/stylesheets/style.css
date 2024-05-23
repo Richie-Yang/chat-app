@@ -1,0 +1,151 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: lightblue;
+  background-size: cover;
+  background-position: center center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  min-height: 100vh;
+  font-family: 'Lato', sans-serif;
+  margin: 0 0 50px;
+}
+
+.tab-container,
+#form {
+  background: rgba(0, 0, 0, 0.15);
+  padding: 0.25rem;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  height: 3rem;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+}
+
+.tab-container {
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+#form {
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+
+#input {
+  border: none;
+  padding: 0 1rem;
+  border-radius: 2rem;
+  margin: 0.25rem;
+  flex-grow: 1;
+}
+
+#input:focus {
+  outline: none;
+}
+
+.nav-item > a,
+#form > button {
+  background: #333;
+  border: none;
+  padding: 0 1rem;
+  margin: 0.25rem;
+  border-radius: 3px;
+  outline: none;
+  color: #fff;
+}
+
+.chat-container,
+.user-list,
+.user-form {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 25px;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  padding: 15px;
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+}
+
+.user-form > *,
+.user-list > * {
+  margin: 0.5rem;
+}
+
+.user-form .form-group > label {
+  color: #fff;
+}
+
+.user-list > .user-list-item {
+  font-size: 1.1em;
+  background: #fff;
+  border: none;
+  padding: 0 1rem;
+  border-radius: 3px;
+  outline: none;
+  color: #333;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.message {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50px;
+  box-shadow: 0px 15px 5px 0px rgba(0, 0, 0, 0.5);
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.message.left {
+  align-self: flex-start;
+  padding: 15px 20px 15px 70px;
+}
+
+.message.right {
+  align-self: flex-end;
+  padding: 15px 70px 15px 20px;
+}
+
+.logo {
+  border-radius: 50%;
+  box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.7);
+  object-fit: cover;
+  position: absolute;
+  left: 10px;
+  top: -10px;
+  width: 50px;
+  height: 50px;
+}
+
+.message.right .logo {
+  left: auto;
+  right: 10px;
+}
+
+.message p {
+  margin: 0;
+}

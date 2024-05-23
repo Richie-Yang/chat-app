@@ -1,28 +1,33 @@
 import * as Koa from 'koa';
 import * as cors from '@koa/cors';
-import * as Router from '@koa/router';
-// import * as multer from '@koa/multer';
 import * as logger from 'koa-logger';
-import * as mount from 'koa-mount';
-import send = require('koa-send');
-import { parseBody, logRequest, validateToken } from './middlewares';
-import { respondError, respondMessage } from './responses';
-import { CONFIG } from './config';
-import { Server } from 'socket.io';
-import * as path from 'path';
 import * as http from 'http';
+import * as routes from './routes';
+import * as serve from 'koa-static';
+import * as path from 'path';
+
+import { parseBody, logRequest } from './middlewares/common.middleware';
+import { respondError } from './utils/responses.util';
+import { CONFIG } from './config';
+import { firestore } from './repositories';
+import { get } from 'lodash';
+import { Server } from 'socket.io';
+import { websocket } from './websocket';
+import mount = require('koa-mount');
 
 const app = new Koa({ proxy: false });
-const router = new Router();
 const server = http.createServer(app.callback());
 const io = new Server(server, { connectionStateRecovery: {} });
-// const uploadFile = multer();
+firestore.init();
+websocket.init(io);
 
 app.use(
   cors({
     origin: CONFIG.FRONTEND_DOMAIN,
   })
 );
+const staticDirPath = path.join(__dirname, '../public');
+app.use(mount('/public', serve(staticDirPath)));
 app.use(parseBody());
 app.use(logger());
 app.use(logRequest());
@@ -36,27 +41,11 @@ app.use(async (ctx: Koa.Context, next: Koa.Next) => {
   }
 });
 
-router.get('/test', validateToken, async (ctx: Koa.Context) =>
-  respondMessage(ctx, 'ok')
-);
-
-router.get('/', async (ctx: Koa.Context) => {
-  await send(ctx, ctx.path, {
-    root: path.join(__dirname, '../public/index.html'),
-  });
-});
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-  socket.broadcast.emit('hi');
-
-  socket.on('chat message', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('chat message', msg);
-  });
-});
-
-app.use(mount('/', router.routes()));
+for (const route in routes) {
+  const routeModule = get(routes, route) as Koa.Middleware;
+  app.use(routeModule);
+  console.log(`routeModule ${route} is bind`);
+}
 
 server.listen(CONFIG.PORT, () =>
   console.log(`Server running on port ${CONFIG.PORT}`)

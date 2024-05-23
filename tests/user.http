@@ -1,0 +1,28 @@
+# @name singup
+POST {{endpoint}}/api/user
+Content-Type: application/json
+
+{
+  "name": "test-user",
+  "email": "test-email",
+  "password": "test-password"
+}
+###
+
+# @name login
+POST {{endpoint}}/api/user/login
+Content-Type: application/json
+
+{
+  "email": "test-email",
+  "password": "test-password"
+}
+###
+
+# @name logout
+POST {{endpoint}}/api/user/logout
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{}
+###
