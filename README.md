@@ -20,9 +20,14 @@ main components:
 
 ### App View
 
-![Login Page](/public/images/login_view.jpg)
+<p float="left">
+  <img src="/public/images/login_view.jpg" width="30%">
+  <img src="/public/images/conversation_view.jpg" width="30%">
+</p>
 
-![Conversation Page](/public/images/conversation_view.jpg)
+<!-- ![<Login Page](/public/images/login_view.jpg) -->
+
+<!-- ![Conversation Page](/public/images/conversation_view.jpg) -->
 
 ## Features
 
