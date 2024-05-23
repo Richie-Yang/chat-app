@@ -22,7 +22,7 @@ Content-Type: application/json
 # @name logout
 POST {{endpoint}}/api/user/logout
 Content-Type: application/json
-Authorization: Bearer USER-2e1f5cf5-35d8-40d0-a5f1-0b762df16106:d3GZVtFqH959DSXbXWCivWBEwt5PZkyRGUfxJF5ke23njc8v4qP7FDdcPZzAA6jI0AKSyym8tHWUPMRk6jqH78xz14tSndzRGrktKMmDp8fpUDBv9qEvAxxog1kzW7pL
+Authorization: Bearer {{token}}
 
 {}
 ###
