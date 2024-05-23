@@ -25,10 +25,6 @@ main components:
   <img src="/public/images/conversation_view.jpg" width="30%">
 </p>
 
-<!-- ![<Login Page](/public/images/login_view.jpg) -->
-
-<!-- ![Conversation Page](/public/images/conversation_view.jpg) -->
-
 ## Features
 
 1. User can register an account and login to chat.
