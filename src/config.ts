@@ -16,7 +16,5 @@ export const CONFIG = (() => {
     SERVICE_ACCOUNT_ENV: process.env.SERVICE_ACCOUNT_ENV,
 
     PORT: process.env.PORT,
-    AUTH_TOKEN: process.env.AUTH_TOKEN,
-    FRONTEND_DOMAIN: process.env.FRONTEND_DOMAIN,
   };
 })();
