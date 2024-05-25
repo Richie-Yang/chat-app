@@ -67,7 +67,7 @@
 
         const authToken = `${id}:${token}`;
         sessionStorage.setItem('token', authToken);
-        if (status === 200) window.location.href = './user-list';
+        if (data.status === 200) window.location.href = './user-list';
       });
     </script>
   </body>
