@@ -8,6 +8,7 @@ import { sessionService } from '.';
 import { ConditionalOrderWhereQuery } from '../repositories/firebase.type';
 import { SchemaType } from '../variables';
 
+
 const PASSWORD_SALT_ROUNDS = 10;
 const TOKEN_EXPIRES_IN = 60 * 60 * 6; // 6 hours
 

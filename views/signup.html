@@ -56,7 +56,6 @@
           error.text = 'both name, email, and password are required';
           Swal.fire(error);
         }
-
         const response = await fetch('/api/user', {
           method: 'POST',
           headers: {

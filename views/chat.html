@@ -142,7 +142,6 @@
             console.log(err);
           });
       });
-
       socket.on(chatId, (messageData) => {
         const msg = parseMessage(messageData, fromId);
         appendMessage(msg);
