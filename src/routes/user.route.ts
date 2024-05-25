@@ -1,6 +1,10 @@
 import * as Router from '@koa/router';
 import { Context } from 'koa';
-import { respondData, respondMessage } from '../utils/responses.util';
+import {
+  respondData,
+  respondMessage,
+  throwError,
+} from '../utils/responses.util';
 import { userSchema } from '../schemas';
 import { userService } from '../services';
 import {
@@ -15,7 +19,12 @@ router.post(
   validateSchema(userSchema.login),
   async (ctx: Context) => {
     const data = ctx.request.body as userSchema.Login;
-    const result = await userService.login(ctx.requestId, data);
+    const user = await userService
+      .validateLogin(ctx.requestId, data)
+      .catch((err) => throwError(ctx, 401, err));
+
+    let result = null;
+    if (user) result = await userService.generateToken(ctx.requestId, user);
     return respondData(ctx, result);
   }
 );
@@ -31,7 +40,7 @@ router.post(
   validateSchema(userSchema.signup),
   async (ctx: Context) => {
     const data = ctx.request.body as userSchema.Signup;
-    const result = await userService.signup(ctx.requestId, data);
+    const result = await userService.create(ctx.requestId, data);
     return respondData(ctx, result);
   }
 );

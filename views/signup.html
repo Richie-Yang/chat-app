@@ -39,12 +39,24 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       document.getElementById('submit').addEventListener('click', async (e) => {
         e.preventDefault();
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+        const error = {
+          title: 'Error!',
+          text: null,
+          icon: 'error',
+          confirmButtonText: 'OK',
+        };
+        if (!name || !email || !password) {
+          error.text = 'both name, email, and password are required';
+          Swal.fire(error);
+        }
+
         const response = await fetch('/api/user', {
           method: 'POST',
           headers: {
@@ -53,7 +65,11 @@
           body: JSON.stringify({ name, email, password }),
         });
         const data = await response.json();
-        window.location.href = './login';
+        if (data.status === 200) window.location.href = './login';
+        else {
+          error.text = data.message;
+          Swal.fire(error);
+        }
       });
     </script>
   </body>
