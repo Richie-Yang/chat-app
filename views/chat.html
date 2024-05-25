@@ -19,7 +19,7 @@
         <a class="nav-link" href="/user-list">User-List</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="logout">Logout</a>
+        <a class="nav-link" id="logout" , href="">Logout</a>
       </li>
     </ul>
 
@@ -29,7 +29,6 @@
 
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
-      <button id="toggle-btn">Disconnect</button>
     </form>
 
     <script
@@ -143,18 +142,6 @@
             console.log(err);
           });
       });
-
-      toggleButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (socket.connected) {
-          toggleButton.innerText = 'Connect';
-          socket.disconnect();
-        } else {
-          toggleButton.innerText = 'Disconnect';
-          socket.connect();
-        }
-      });
-
       socket.on(chatId, (messageData) => {
         const msg = parseMessage(messageData, fromId);
         appendMessage(msg);

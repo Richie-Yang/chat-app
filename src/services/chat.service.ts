@@ -104,16 +104,17 @@ async function getMessages(
   const defaultFilter: OrderWhereQueryWithLimit = {
     order: {
       fieldKey: 'createdAt',
-      fieldValue: OrderOperator.asc,
+      fieldValue: OrderOperator.desc,
     },
   };
   filter = { ...defaultFilter, ...filter };
 
-  const messages = await chatRepository.findAllMessages(
+  let messages = await chatRepository.findAllMessages(
     requestId,
     chatId,
     filter
   );
+  messages.sort((a, b) => a.createdAt - b.createdAt);
   console.log('chatService:getMessages:messages:', messages);
   return messages;
 }

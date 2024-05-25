@@ -1,5 +1,4 @@
 import * as Koa from 'koa';
-import * as cors from '@koa/cors';
 import * as logger from 'koa-logger';
 import * as http from 'http';
 import * as routes from './routes';
@@ -21,11 +20,6 @@ const io = new Server(server, { connectionStateRecovery: {} });
 firestore.init();
 websocket.init(io);
 
-app.use(
-  cors({
-    origin: CONFIG.FRONTEND_DOMAIN,
-  })
-);
 const staticDirPath = path.join(__dirname, '../public');
 app.use(mount('/public', serve(staticDirPath)));
 app.use(parseBody());

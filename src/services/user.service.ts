@@ -6,13 +6,22 @@ import { WhereOperator } from '../repositories/firebase.variable';
 import { genRandomString } from '../utils/common.util';
 import { sessionService } from '.';
 import { ConditionalOrderWhereQuery } from '../repositories/firebase.type';
+import { SchemaType } from '../variables';
+
 
 const PASSWORD_SALT_ROUNDS = 10;
 const TOKEN_EXPIRES_IN = 60 * 60 * 6; // 6 hours
 
-export { signup, login, logout, findById, findAll };
+export {
+  create,
+  validateLogin,
+  generateToken,
+  logout,
+  findById,
+  findAll,
+};
 
-async function signup(requestId: string, data: userSchema.Signup) {
+async function create(requestId: string, data: userSchema.Signup) {
   const foundUser = await userRepository.findOne(requestId, {
     where: {
       or: [
@@ -39,7 +48,7 @@ async function signup(requestId: string, data: userSchema.Signup) {
   return omit(cloneData, 'password');
 }
 
-async function login(requestId: string, data: userSchema.Login) {
+async function validateLogin(requestId: string, data: userSchema.Login) {
   const foundUser = await userRepository.findOne(requestId, {
     where: {
       and: [
@@ -54,8 +63,14 @@ async function login(requestId: string, data: userSchema.Login) {
   if (!foundUser) throw new Error('User not found');
   const isPasswordMatch = bcrypt.compareSync(data.password, foundUser.password);
   if (!isPasswordMatch) throw new Error('Password not match');
+  return foundUser;
+}
 
-  await userRepository.updateById(requestId, foundUser.id, {
+async function generateToken(
+  requestId: string,
+  user: userSchema.User<SchemaType.OUTPUT>
+) {
+  await userRepository.updateById(requestId, user.id, {
     token: genRandomString(128, {
       hasNumber: true,
       hasLowercaseChr: true,
@@ -63,10 +78,9 @@ async function login(requestId: string, data: userSchema.Login) {
     }),
     expiresAt: Math.round(Date.now() / 1000) + TOKEN_EXPIRES_IN,
   });
-  const updateUser = await userRepository.findById(requestId, foundUser.id);
-  const USER_KEY = sessionService.SESSION_KEYS.USER(foundUser.id);
+  const updateUser = await userRepository.findById(requestId, user.id);
+  const USER_KEY = sessionService.SESSION_KEYS.USER(user.id);
   sessionService.set(USER_KEY, updateUser!);
-
   return omit(updateUser!, 'password');
 }
 
