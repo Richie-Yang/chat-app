@@ -9,6 +9,7 @@
     "dev": "npm run build && node lib/index.js",
     "start": "node --max-old-space-size=1536 lib/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy:app:dev": "GCP_PROJECT=richie-demo CLOUD_RUN_SERVICE=chat-app-dev sh ./deploy.sh",
     "deploy:app:prod": "GCP_PROJECT=richie-demo CLOUD_RUN_SERVICE=chat-app sh ./deploy.sh"
   },
   "engines": {
