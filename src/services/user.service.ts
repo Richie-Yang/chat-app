@@ -8,18 +8,10 @@ import { sessionService } from '.';
 import { ConditionalOrderWhereQuery } from '../repositories/firebase.type';
 import { SchemaType } from '../variables';
 
-
 const PASSWORD_SALT_ROUNDS = 10;
 const TOKEN_EXPIRES_IN = 60 * 60 * 6; // 6 hours
 
-export {
-  create,
-  validateLogin,
-  generateToken,
-  logout,
-  findById,
-  findAll,
-};
+export { create, validateLogin, generateToken, logout, findById, findAll };
 
 async function create(requestId: string, data: userSchema.Signup) {
   const foundUser = await userRepository.findOne(requestId, {
