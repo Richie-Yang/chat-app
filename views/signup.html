@@ -55,6 +55,7 @@
         if (!name || !email || !password) {
           error.text = 'both name, email, and password are required';
           Swal.fire(error);
+          throw new Error(error.text);
         }
         const response = await fetch('/api/user', {
           method: 'POST',
