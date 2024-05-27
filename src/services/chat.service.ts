@@ -4,7 +4,7 @@ import {
   OrderOperator,
   WhereOperator,
 } from '../repositories/firebase.variable';
-import { chatSchema } from '../schemas';
+import { chatSchema, userSchema } from '../schemas';
 import { SchemaType } from '../variables';
 import { sessionService, userService } from '.';
 import { OrderWhereQueryWithLimit } from '../repositories/firebase.type';
@@ -84,12 +84,15 @@ async function getChatUsers(requestId: string, fromId: string, toId: string) {
   const userPromises = userIds.map((userId) =>
     userService.findById(requestId, userId)
   );
-  const users = await Promise.all(userPromises);
-  if (!users || users.length < 2) throw new Error('Invalid users');
+  const users = (await Promise.all(userPromises)).filter(
+    (user) => user
+  ) as userSchema.User<SchemaType.OUTPUT>[];
+  if (!users || users.length < 2) throw new Error('Invalid user length');
   // console.log('chatService:getChatUsers:users:', users);
 
   const from = users.find((user) => user.id === fromId);
   const to = users.find((user) => user.id === toId);
+  if (!from || !to) throw new Error('Invalid users value');
 
   // console.log('chatService:getChatUsers:from:', from);
   // console.log('chatService:getChatUsers:to:', to);
