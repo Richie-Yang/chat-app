@@ -48,13 +48,13 @@ describe('chatService', () => {
         return Promise.resolve(null);
       });
 
-      expect(async () => {
-        await chatService.getChatUsers(
+      expect(async () =>
+        chatService.getChatUsers(
           FAKE_REQUEST_ID,
           fakeMessage.fromId,
           fakeMessage.toId
-        );
-      }).rejects.toThrow();
+        )
+      ).rejects.toThrow();
     });
   });
 
@@ -128,6 +128,49 @@ describe('chatService', () => {
         FAKE_CHAT_ID,
         expected
       );
+    });
+  });
+
+  describe('getCreateChat', () => {
+    const fakeMessage = {
+      fromId: 1,
+      toId: 2,
+      content: 'fake-message',
+    };
+    const userIds = [1, 2];
+
+    it('with exist data', async () => {
+      chatService.getChatUsers = jest.fn().mockResolvedValue({
+        from: { id: 1 },
+        to: { id: 2 },
+      });
+
+      chatRepository.findAll.mockResolvedValue([{ userIds }]);
+
+      const result = await chatService.getCreateChat(
+        FAKE_REQUEST_ID,
+        fakeMessage
+      );
+
+      expect(result).toEqual({ userIds });
+    });
+
+    it('without exist data', async () => {
+      chatService.getChatUsers = jest.fn().mockResolvedValue({
+        from: { id: 1 },
+        to: { id: 2 },
+      });
+
+      chatRepository.findAll.mockResolvedValue([]);
+      chatRepository.initChat.mockResolvedValue({});
+      chatRepository.findById.mockResolvedValue({ userIds });
+
+      const result = await chatService.getCreateChat(
+        FAKE_REQUEST_ID,
+        fakeMessage
+      );
+
+      expect(result).toEqual({ userIds });
     });
   });
 });

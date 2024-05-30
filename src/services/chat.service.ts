@@ -6,13 +6,13 @@ import {
 } from '../repositories/firebase.variable';
 import { chatSchema, userSchema } from '../schemas';
 import { SchemaType } from '../variables';
-import { sessionService, userService } from '.';
+import { sessionService, userService, chatService } from '.';
 import { OrderWhereQueryWithLimit } from '../repositories/firebase.type';
 
 export { getCreateChat, sendMessage, getChatUsers, getMessages };
 
 async function getCreateChat(requestId: string, message: chatSchema.Send) {
-  const { from, to, users } = await getChatUsers(
+  const { from, to, users } = await chatService.getChatUsers(
     requestId,
     message.fromId,
     message.toId
