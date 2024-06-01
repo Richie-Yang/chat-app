@@ -62,15 +62,17 @@ async function generateToken(
   requestId: string,
   user: userSchema.User<SchemaType.OUTPUT>
 ) {
+  const token = genRandomString(128, {
+    hasNumber: true,
+    hasLowercaseChr: true,
+    hasUppercaseChr: true,
+  });
   await userRepository.updateById(requestId, user.id, {
-    token: genRandomString(128, {
-      hasNumber: true,
-      hasLowercaseChr: true,
-      hasUppercaseChr: true,
-    }),
+    token,
     expiresAt: Math.round(Date.now() / 1000) + TOKEN_EXPIRES_IN,
   });
   const updateUser = await userRepository.findById(requestId, user.id);
+  if (token === updateUser?.token) throw new Error('token updated failed');
   const USER_KEY = sessionService.SESSION_KEYS.USER(user.id);
   sessionService.set(USER_KEY, updateUser!);
   return omit(updateUser!, 'password');
