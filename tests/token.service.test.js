@@ -2,7 +2,6 @@ const moment = require('moment');
 const { tokenService } = require('../lib/services');
 const userService = require('../lib/services/user.service');
 
-// Mock the userService module
 jest.mock('../lib/services/user.service');
 
 const FAKE_REQUEST_ID = 'FAKE_REQUEST_ID';

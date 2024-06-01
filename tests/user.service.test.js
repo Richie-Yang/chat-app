@@ -4,7 +4,6 @@ const sessionService = require('../lib/services/session.service');
 const userRepository = require('../lib/repositories/user.repository');
 const bcrypt = require('bcrypt');
 
-// Mock the userService module
 jest.mock('../lib/repositories/user.repository');
 jest.mock('../lib/services/session.service');
 jest.mock('bcrypt');

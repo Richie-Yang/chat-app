@@ -2,7 +2,6 @@ const chatService = require('../lib/services/chat.service');
 const userService = require('../lib/services/user.service');
 const chatRepository = require('../lib/repositories/chat.repository');
 
-// Mock the userService module
 jest.mock('../lib/services/user.service');
 jest.mock('../lib/repositories/chat.repository');
 

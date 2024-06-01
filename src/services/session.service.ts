@@ -1,4 +1,5 @@
 import { AnyObject } from '../types';
+import { sessionService } from './';
 
 export { set, get, del, clear };
 
@@ -11,16 +12,16 @@ export let session: { [key: string]: string } = {};
 
 function set(key: string, value: AnyObject) {
   const flatValue = JSON.stringify(value);
-  session[key] = flatValue;
+  sessionService.session[key] = flatValue;
   return;
 }
 
 function get(key: string) {
-  if (!(key in session)) return null;
+  if (!(key in sessionService.session)) return null;
 
   let value = null;
   try {
-    const flatValue = session[key];
+    const flatValue = sessionService.session[key];
     value = JSON.parse(flatValue);
   } catch (error) {
     console.error(error);
@@ -30,10 +31,10 @@ function get(key: string) {
 }
 
 function del(key: string) {
-  delete session[key];
+  delete sessionService.session[key];
   return;
 }
 
 function clear() {
-  session = {};
+  sessionService.session = {};
 }
