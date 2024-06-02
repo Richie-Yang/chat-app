@@ -1,13 +1,16 @@
-const moment = require('moment');
-const { tokenService } = require('../lib/services');
-const userService = require('../lib/services/user.service');
+import { describe, it, beforeEach, expect, jest } from '@jest/globals';
+import * as moment from 'moment';
 
-// Mock the userService module
-jest.mock('../lib/services/user.service');
+import { tokenService } from '../';
+import * as userService from '../user.service';
+
+jest.mock('../user.service');
 
 const FAKE_REQUEST_ID = 'FAKE_REQUEST_ID';
 
 describe('tokenService', () => {
+  const mockedUserService = userService as jest.Mocked<any>;
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -24,7 +27,7 @@ describe('tokenService', () => {
         expiresAt: moment().add(5, 'd').unix(),
       };
 
-      userService.findById.mockResolvedValue(foundUser);
+      mockedUserService.findById.mockResolvedValue(foundUser);
 
       const result = await tokenService.validateToken(
         FAKE_REQUEST_ID,
@@ -39,7 +42,7 @@ describe('tokenService', () => {
       const FAKE_TOKEN = 'valid_token';
       const FAKE_AUTH_TOKEN = `Bearer ${FAKE_ID}:${FAKE_TOKEN}`;
 
-      userService.findById.mockResolvedValue(null);
+      mockedUserService.findById.mockResolvedValue(null);
 
       expect(async () =>
         tokenService.validateToken(FAKE_REQUEST_ID, FAKE_AUTH_TOKEN)
@@ -67,7 +70,7 @@ describe('tokenService', () => {
         expiresAt: moment().add(5, 'day').unix(),
       };
 
-      userService.findById.mockResolvedValue(foundUser);
+      mockedUserService.findById.mockResolvedValue(foundUser);
 
       expect(async () =>
         tokenService.validateToken(FAKE_REQUEST_ID, FAKE_AUTH_TOKEN)
@@ -85,7 +88,7 @@ describe('tokenService', () => {
         expiresAt: moment().subtract(1, 'm').unix(),
       };
 
-      userService.findById.mockResolvedValue(foundUser);
+      mockedUserService.findById.mockResolvedValue(foundUser);
 
       expect(async () =>
         tokenService.validateToken(FAKE_REQUEST_ID, FAKE_AUTH_TOKEN)
