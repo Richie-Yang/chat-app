@@ -72,4 +72,3 @@ lib/
 env/service_account*
 tn.png
 temp/
-coverage.txt
