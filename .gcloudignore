@@ -1,6 +1,5 @@
-node_modules
-npm-debug.log
-lib
-.env
-.env.example
-test.http
+node_modules;
+npm - debug.log;
+lib.env.env.example;
+test.http;
+coverage.txt;

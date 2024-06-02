@@ -90,7 +90,7 @@ async function findById(
   id: string,
   options?: { isCacheEnabled?: boolean }
 ) {
-  let user = null;
+  let user: userSchema.User<SchemaType.OUTPUT> | null = null;
   const USER_KEY = sessionService.SESSION_KEYS.USER(id);
 
   if (options?.isCacheEnabled) {

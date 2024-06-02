@@ -1,9 +1,12 @@
-const sessionService = require('../lib/services/session.service');
+import { describe, it, beforeEach, expect, jest } from '@jest/globals';
+
+import * as sessionService from '../session.service';
+import { AnyObject } from '../../types';
 
 describe('sessionService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    sessionService.session = {};
+    (sessionService.session as AnyObject) = {};
   });
 
   const fakeId = 'fake-id';
