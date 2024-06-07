@@ -92,11 +92,12 @@ describe('userService', () => {
     it('success With no cache data', async () => {
       mockedSessionService.get.mockReturnValue(null);
       mockedUserRepository.findById.mockResolvedValue(fakeUser);
+      const expected = _.cloneDeep(_.omit(fakeUser, ['password']));
 
       const result = await userService.findById(FAKE_REQUEST_ID, '1', {
         isCacheEnabled: true,
       });
-      expect(result).toEqual(fakeUser);
+      expect(result).toEqual(expected);
     });
 
     it('success With no data', async () => {
@@ -112,9 +113,10 @@ describe('userService', () => {
     it('success With with data + no cache', async () => {
       mockedSessionService.get.mockReturnValue(null);
       mockedUserRepository.findById.mockResolvedValue(fakeUser);
+      const expected = _.cloneDeep(_.omit(fakeUser, ['password']));
 
       const result = await userService.findById(FAKE_REQUEST_ID, '1');
-      expect(result).toEqual(fakeUser);
+      expect(result).toEqual(expected);
     });
   });
 });
