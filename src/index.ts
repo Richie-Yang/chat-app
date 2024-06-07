@@ -13,6 +13,7 @@ import { get } from 'lodash';
 import { Server } from 'socket.io';
 import { websocket } from './websocket';
 import mount = require('koa-mount');
+const cors = require('@koa/cors');
 
 const app = new Koa({ proxy: false });
 const server = http.createServer(app.callback());
@@ -25,6 +26,7 @@ app.use(mount('/public', serve(staticDirPath)));
 app.use(parseBody());
 app.use(logger());
 app.use(logRequest());
+app.use(cors());
 
 app.use(async (ctx: Koa.Context, next: Koa.Next) => {
   try {

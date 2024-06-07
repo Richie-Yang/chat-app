@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { cloneDeep, omit } from 'lodash';
+import { cloneDeep, omit, isNil } from 'lodash';
 import { userRepository } from '../repositories';
 import { userSchema } from '../schemas';
 import { WhereOperator } from '../repositories/firebase.variable';
@@ -10,6 +10,7 @@ import { SchemaType } from '../variables';
 
 const PASSWORD_SALT_ROUNDS = 10;
 const TOKEN_EXPIRES_IN = 60 * 60 * 6; // 6 hours
+const FILTER_USER_FIELDS = ['password', 'token', 'expiresAt'];
 
 export { create, validateLogin, generateToken, logout, findById, findAll };
 
@@ -37,7 +38,7 @@ async function create(requestId: string, data: userSchema.Signup) {
   const hash = await bcrypt.hash(cloneData.password, salt);
   cloneData.password = hash;
   await userRepository.create(requestId, cloneData);
-  return omit(cloneData, 'password');
+  return omit(cloneData, FILTER_USER_FIELDS);
 }
 
 async function validateLogin(requestId: string, data: userSchema.Login) {
@@ -72,7 +73,8 @@ async function generateToken(
     expiresAt: Math.round(Date.now() / 1000) + TOKEN_EXPIRES_IN,
   });
   const updateUser = await userRepository.findById(requestId, user.id);
-  if (token === updateUser?.token) throw new Error('token updated failed');
+
+  if (token !== updateUser?.token) throw new Error('token updated failed');
   const USER_KEY = sessionService.SESSION_KEYS.USER(user.id);
   sessionService.set(USER_KEY, updateUser!);
   return omit(updateUser!, 'password');
@@ -100,9 +102,10 @@ async function findById(
 
   user = await userRepository.findById(requestId, id);
   if (user) sessionService.set(USER_KEY, user);
-  return user;
+  return isNil(user) ? null : omit(user, 'password');
 }
 
 async function findAll(requestId: string, filter?: ConditionalOrderWhereQuery) {
-  return userRepository.findAll(requestId, filter);
+  const users = await userRepository.findAll(requestId, filter);
+  return users.map((user) => omit(user, FILTER_USER_FIELDS));
 }
