@@ -3,18 +3,27 @@
 Chat-app, the web service which provides realtime conversation service.
 
 You can visit the dmeo website here:
-https://chat-app-vlwbiireva-de.a.run.app/login
+https://richie-demo.web.app
+
+This project is for backend part, for frontend part, please visit below link:
+https://github.com/Richie-Yang/chat-ui
 
 ## Motivation
 
-This app is built for testing websocket purpose only. I used to build other type of chat app with firestore and related listener kit, but this time I wanted to try websocket, and most time will mainly spent on backend side, so the frontend is not that fancy.
+This app is designed solely for testing WebSocket functionality. Previously, I have developed various chat applications using Firestore and related listener kits. However, this time I wanted to experiment with WebSocket technology. Additionally, the frontend is built using React.js and Redux. This project marks my first experience with these frontend tech.
 
-main components:
+backend main components:
 
 - Koa.js
 - Websocket
 - GCP Firestore
 - GCP Cloud Run
+
+frontend main components:
+- React.js
+- Redux
+- Websocket
+- GCP Hosting
 
 ## Screenshots
 
